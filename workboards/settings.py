@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-fjrd0%t8cjm8ktmfm$@9$6p5@+%(_t=8*!=vhl4d!w%mmh)j0i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,19 +38,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'channels',
     'corsheaders',  # For allowing frontend to interact with the backend
-    'workboards'
+    'workboards',
     
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # Add CORS middleware before CommonMiddleware
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'workboards.urls'
@@ -71,7 +73,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'workboards.wsgi.application'
+# WSGI_APPLICATION = 'workboards.wsgi.application'
+ASGI_APPLICATION = 'workboards.asgi.application'
+
 
 
 # Database
@@ -109,8 +113,18 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # Add your frontend URL here
+]
+CORS_ALLOW_ALL_ORIGINS = True  # For testing, but don't use this in production
 
-
+# Channels settings (make sure this is correct for Redis or other backends)
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+         # In-memory backend for development
+    },
+}
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -127,6 +141,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
