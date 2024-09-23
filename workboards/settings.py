@@ -120,9 +120,14 @@ CORS_ALLOW_ALL_ORIGINS = True  # For testing, but don't use this in production
 
 # Channels settings (make sure this is correct for Redis or other backends)
 CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",
-         # In-memory backend for development
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            # 'hosts': [('127.0.0.1', 6379)],  # Default Redis port
+            'hosts':[('redis-cli -u redis://default:D2PMNLSIJVF3xnXMYnNsmMpLWjfRGX8V@redis-11851.c44.us-east-1-2.ec2.redns.redis-cloud.com:11851',62737)],
+             "password": "D2PMNLSIJVF3xnXMYnNsmMpLWjfRGX8V",  # Add Redis Cloud password
+
+        },
     },
 }
 # Internationalization
@@ -137,14 +142,5 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = 'static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -1,16 +1,15 @@
 # # routing.py
 
 # from django.urls import re_path
-# from boards import consumers  # Assuming your consumers are in boards app
+# from workboards.consumers import TaskConsumer
 
 # websocket_urlpatterns = [
-#     re_path(r'ws/tasks/', consumers.TaskConsumer.as_asgi()),  # Point to your consumer
+#     re_path(r'ws/tasks/(?P<workboard_id>\d+)/$', TaskConsumer.as_asgi()),  # WebSocket route for tasks
 # ]
-# routing.py
-
+# #
 from django.urls import re_path
-from boards.consumers import TaskConsumer  # Adjust to your app and consumer
+from . import consumers
 
 websocket_urlpatterns = [
-    re_path(r'ws/tasks/', TaskConsumer.as_asgi()),
+    re_path(r'ws', consumers.SocketConsumer.as_asgi()),
 ]
